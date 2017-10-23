@@ -1,0 +1,8 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/Com.Moonlay.NetCore.Lib/bin
+/Com.Moonlay.NetCore.Lib/obj
+/nuget-published
+/.vs

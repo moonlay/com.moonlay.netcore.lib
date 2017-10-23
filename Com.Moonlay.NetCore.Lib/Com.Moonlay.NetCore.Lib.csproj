@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk"> 
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Com.Moonlay.NetCore.Lib</PackageId>
+    <PackageVersion>1.0.0-alpha-20171023-001</PackageVersion>
+    <Authors>Moonlay</Authors>
+    <Description>Moonlay NetCore standard library</Description>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <Copyright>Copyright 2017 (c) Moonlay. All rights reserved.</Copyright>
+    <PackageTags>NetCore, Service</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Com.Moonlay.EntityFrameworkCore" Version="1.0.0-alpha-10122017-003" />
+    <PackageReference Include="Com.Moonlay.Models" Version="1.0.0-alpha-10122017-001" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
+  </ItemGroup>  
+</Project>
