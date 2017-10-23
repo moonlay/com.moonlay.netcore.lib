@@ -4,9 +4,11 @@
     <PackageId>Com.Moonlay.NetCore.Lib</PackageId>
     <PackageVersion>1.0.0-alpha-20171023-001</PackageVersion>
     <Authors>Moonlay</Authors>
-    <Description>Moonlay NetCore standard library</Description>
+    <Title>Com.Moonlay.NetCore.Lib</Title>
+    <Description>Moonlay NetCore standard library</Description>    
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/moonlay/com.moonlay.netcore.lib</PackageProjectUrl>    
     <Copyright>Copyright 2017 (c) Moonlay. All rights reserved.</Copyright>
     <PackageTags>NetCore, Service</PackageTags>
   </PropertyGroup>
