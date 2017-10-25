@@ -25,5 +25,5 @@ Interface for all service implementation.
 
 
 
-[Com.Moonlay.NetCore.Lib.docs.IService]: ./Com.Moonlay.NetCore.Lib/docs/Com.Moonlay.NetCore.Lib.Services.IService.md
+[Com.Moonlay.NetCore.Lib.docs.IService]: ./Com.Moonlay.NetCore.Lib.Services.IService.md
 [Com.Moonlay.NetCore.Lib.Services.IService]: ../Com.Moonlay.NetCore.Lib/Services/IService.cs

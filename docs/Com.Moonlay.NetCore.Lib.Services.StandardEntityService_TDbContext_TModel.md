@@ -44,5 +44,5 @@ Basic implementation from [`Com.Moonlay.NetCore.Lib.Services.BaseEFService<TDbCo
 
 
 
-[Com.Moonlay.NetCore.Lib.docs.BaseEFService<TDbContext, TModel, TKey>]: ./Com.Moonlay.NetCore.Lib/docs/Com.Moonlay.NetCore.Lib.Services.StandardEntityService_TDbContext_TModel.md
+[Com.Moonlay.NetCore.Lib.docs.BaseEFService<TDbContext, TModel, TKey>]: ./Com.Moonlay.NetCore.Lib.Services.StandardEntityService_TDbContext_TModel.md
 [Com.Moonlay.NetCore.Lib.Services.StandardEntityService<TDbContext, TModel>]: ../Com.Moonlay.NetCore.Lib/Services/StandardEntityService.cs
