@@ -95,7 +95,7 @@ public class TestModelService : StandardEntityService<TestDbContext, TestModel>
 
 
 [Com.Moonlay.NetCore.Lib.Services.IService]: ./docs/Com.Moonlay.NetCore.Lib.Services.IService.md
-[Com.Moonlay.NetCore.Lib.Services.IService<TModel, TKey>]: ./docs/ComCom.Moonlay.NetCore.Lib.Services.IService_TModel_TKey.md
+[Com.Moonlay.NetCore.Lib.Services.IService<TModel, TKey>]: ./docs/Com.Moonlay.NetCore.Lib.Services.IService_TModel_TKey.md
 [Com.Moonlay.NetCore.Lib.Services.IBaseEFService]: ./docs/Com.Moonlay.NetCore.Lib.Services.IBaseEFService.md
 [Com.Moonlay.NetCore.Lib.Services.IBaseEFService<TDbContext, TModel, TKey>]: ./docs/Com.Moonlay.NetCore.Lib.Services.IBaseEFService_TDbContext_TModel_TKey.md
 [Com.Moonlay.NetCore.Lib.Services.BaseEFService<TDbContext, TModel, TKey>]: ./docs/Com.Moonlay.NetCore.Lib.Services.BaseEFService_TDbContext_TModel_TKey.md 
