@@ -43,4 +43,4 @@ Abstract implementation from [`Com.Moonlay.NetCore.Lib.Services.IBaseEFService<T
 
 
 [Com.Moonlay.NetCore.Lib.docs.BaseEFService<TDbContext, TModel, TKey>]: ./Com.Moonlay.NetCore.Lib/docs/Com.Moonlay.NetCore.Lib.Services.BaseEFService_TDbContext_TModel_TKey.md
-[Com.Moonlay.NetCore.Lib.Services.BaseEFService<TDbContext, TModel, TKey>]: ./Com.Moonlay.NetCore.Lib/Services/IBaseEFService.cs
+[Com.Moonlay.NetCore.Lib.Services.BaseEFService<TDbContext, TModel, TKey>]: ../Com.Moonlay.NetCore.Lib/Services/IBaseEFService.cs

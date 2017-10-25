@@ -34,4 +34,4 @@ Base interface for EF service implementation, inherited from [`Com.Moonlay.NetCo
 
 
 [Com.Moonlay.NetCore.Lib.docs.IService]: ./Com.Moonlay.NetCore.Lib/docs/Com.Moonlay.NetCore.Lib.Services.IBaseEFService.md
-[Com.Moonlay.NetCore.Lib.Services.IBaseEFService]: ./Com.Moonlay.NetCore.Lib/Services/IBaseEFService.cs
+[Com.Moonlay.NetCore.Lib.Services.IBaseEFService]: ../Com.Moonlay.NetCore.Lib/Services/IBaseEFService.cs

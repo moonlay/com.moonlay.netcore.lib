@@ -34,4 +34,4 @@ Generic interface for all service implementation, inherited from [`Com.Moonlay.N
 
 
 [Com.Moonlay.NetCore.Lib.docs.IService]: ./Com.Moonlay.NetCore.Lib/docs/Com.Moonlay.NetCore.Lib.Services.IService.md
-[Com.Moonlay.NetCore.Lib.Services.IService<TModel, TKey>]: ./Com.Moonlay.NetCore.Lib/Services/IService.cs
+[Com.Moonlay.NetCore.Lib.Services.IService<TModel, TKey>]: ../Com.Moonlay.NetCore.Lib/Services/IService.cs
