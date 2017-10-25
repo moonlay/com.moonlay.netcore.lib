@@ -2,7 +2,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Com.Moonlay.NetCore.Lib</PackageId>
-    <PackageVersion>1.0.0-alpha-20171023-001</PackageVersion>
+    <PackageVersion>1.0.0-alpha-20171025-001</PackageVersion>
     <Authors>Moonlay</Authors>
     <Title>Com.Moonlay.NetCore.Lib</Title>
     <Description>Moonlay NetCore standard library</Description>    

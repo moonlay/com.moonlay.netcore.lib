@@ -11,6 +11,8 @@ namespace Com.Moonlay.NetCore.Lib.Service
         IEnumerable<object> Get();
         Task<object> GetAsync(object id);
         object Get(object id);
+        Task<object> FindAsync(params object[] keys);
+        object Find(params object[] keys);
 
         Task<int> CreateAsync(object model);
         int Create(object model);
@@ -24,12 +26,14 @@ namespace Com.Moonlay.NetCore.Lib.Service
     }
 
     public interface IService<TModel, TKey> : IService
-        where TModel : IEntity
+        where TModel : IEntity<TKey>
         where TKey : IConvertible
     {
         new IEnumerable<TModel> Get();
         Task<TModel> GetAsync(TKey id);
         TModel Get(TKey id);
+        new Task<TModel> FindAsync(params object[] keys);
+        new TModel Find(params object[] keys);
 
         Task<int> UpdateAsync(TKey id, TModel model);
         int Update(TKey id, TModel model);
