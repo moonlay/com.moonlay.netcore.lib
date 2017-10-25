@@ -7,7 +7,7 @@ using System.Text;
 
 namespace Com.Moonlay.NetCore.Lib.Service
 {
-    public class StandardEntityService<TDbContext, TModel> : BaseService<TDbContext, TModel, int>
+    public class StandardEntityService<TDbContext, TModel> : BaseEFService<TDbContext, TModel, int>
           where TDbContext : DbContext
           where TModel : StandardEntity, IValidatableObject
     {

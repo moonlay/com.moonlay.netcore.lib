@@ -6,3 +6,5 @@
 /Com.Moonlay.NetCore.Lib/obj
 /nuget-published
 /.vs
+/Com.Moonlay.NetCore.Lib.Test/obj
+/Com.Moonlay.NetCore.Lib.Test/bin
