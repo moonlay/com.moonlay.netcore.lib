@@ -84,6 +84,23 @@ namespace Com.Moonlay.NetCore.Lib.Test
             };
         }
 
+        private void GenerateTestModels(int total = 100)
+        {
+            for (int i = 0; i < total; i++)
+            {
+                this.TestCreate();
+            }
+        }
+
+        private IPageable<TestModel> PageList(int pageIndex, int pageSize)
+        {
+            TestModelService service = this.ServiceProvider.GetService<TestModelService>();
+            var query = service.DbSet.Where(o => true);
+            //var data = query.ToList().AsEnumerable();
+
+            return new Pageable<TestModel>(query, pageIndex, pageSize);
+        }
+
 
         [Fact]
         public void TestCreate_Empty()
@@ -133,6 +150,50 @@ namespace Com.Moonlay.NetCore.Lib.Test
 
             var data = service.Find(id);
             Assert.NotNull(data);
+        }
+
+        [Fact]
+        public void TestPageList(){
+
+            int pageSize = 20;
+            int pageIndex = 0;
+            int totalPages = 6;
+            int totalRecords = totalPages * pageSize;
+            this.GenerateTestModels(totalRecords);
+
+            var data = PageList(pageIndex, pageSize);
+
+            Assert.Equal(totalPages, data.TotalPages);
+            Assert.Equal(pageIndex, data.PageIndex);
+
+            // verify doesn't have prev page when pageIndex = 0
+            Assert.False(data.HasPreviousPage);
+
+            var serializePageable = Newtonsoft.Json.JsonConvert.SerializeObject(data);
+            Assert.Contains("PageIndex", serializePageable);
+
+            if (totalPages > 1)
+            {
+                pageIndex++;
+                do
+                {
+                    data = PageList(pageIndex, pageSize);
+                        
+                    // verify last pageIndex doens't have next page
+                    if (pageIndex == totalPages - 1)
+                    {
+                        Assert.False(data.HasNextPage);
+                        Assert.True(data.HasPreviousPage);
+                    }
+                    else
+                    {
+                        Assert.True(data.HasNextPage);
+                    }
+
+                    pageIndex++;
+
+                } while (pageIndex < totalPages);
+            }
         }
 
         [Fact]
