@@ -149,7 +149,7 @@ namespace Com.Moonlay.NetCore.Lib.Test
 
             this.EmptyUpdateModel(data);
 
-            ServiceValidationExeption ex = Assert.Throws<ServiceValidationExeption>(() => service.Update(data.Id, data));
+            ServiceValidationExeption ex = Assert.Throws<ServiceValidationExeption>(() => service.Update(data, data.Id));
             this.AssertUpdateEmpty(ex);
         }
 
@@ -169,7 +169,7 @@ namespace Com.Moonlay.NetCore.Lib.Test
 
             ServiceValidationExeption ex = await Assert.ThrowsAsync<ServiceValidationExeption>(() =>
             {
-                return service.UpdateAsync(data.Id, data);
+                return service.UpdateAsync(data, data.Id);
             });
             this.AssertUpdateEmpty(ex);
         }
@@ -186,7 +186,7 @@ namespace Com.Moonlay.NetCore.Lib.Test
             Assert.NotNull(data);
             Assert.True(createdCount == 1);
 
-            var updatedCount = await service.UpdateAsync(data.Id, data);
+            var updatedCount = await service.UpdateAsync(data, data.Id);
             Assert.True(updatedCount == 1);
         }
 
@@ -203,7 +203,7 @@ namespace Com.Moonlay.NetCore.Lib.Test
                 Assert.NotNull(data);
                 Assert.True(createdCount == 1, string.Format("created count expected 1 but actual {0}", createdCount));
 
-                var updatedCount = service.Update(data.Id, data);
+                var updatedCount = service.Update(data, data.Id);
                 Assert.True(updatedCount == 1, string.Format("updated count expected 1 but actual {0}", updatedCount));
             }
             catch (Exception ex)
@@ -228,13 +228,13 @@ namespace Com.Moonlay.NetCore.Lib.Test
             var affectedResult = await service.DeleteAsync(data.Id);
             Assert.True(affectedResult == 1);
 
-            data = await service.GetAsync(id);
+            data =   service.Get(id);
             Assert.Null(data);
 
             // Test soft delete.
             data = await service.FindAsync(id);
             Assert.NotNull(data);
-            Assert.True(data._IsDeleted);
+            Assert.True(data.IsDeleted);
 
         }
         [Fact]
@@ -259,7 +259,7 @@ namespace Com.Moonlay.NetCore.Lib.Test
             // Test soft delete.
             data = service.Find(id);
             Assert.NotNull(data);
-            Assert.True(data._IsDeleted);
+            Assert.True(data.IsDeleted);
 
         }
 

@@ -1,0 +1,4 @@
+1.0.1-alpha
+- reduce abstractions by removing IBaseEFService and BaseEFService
+- reduce abstractions by removing IService and use IService<TModel,TKey> as base service implementations
+- update StandardEntityService to comply to com.moonlay.entityframeworkcore.1.0.1-alpha

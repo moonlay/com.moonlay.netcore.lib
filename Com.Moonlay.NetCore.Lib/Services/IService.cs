@@ -5,44 +5,47 @@ using System.Threading.Tasks;
 
 namespace Com.Moonlay.NetCore.Lib.Service
 {
-    public interface IService
-    {
+    //public interface IService
+    //{
 
-        IEnumerable<object> Get();
-        Task<object> GetAsync(object id);
-        object Get(object id);
-        Task<object> FindAsync(params object[] keys);
-        object Find(params object[] keys);
+    //    IEnumerable<object> Get();
+    //    object Get(params object[] keys);
+    //    Task<object> GetAsync(params object[] keys);
 
-        Task<int> CreateAsync(object model);
-        int Create(object model);
+    //    object Find(params object[] keys);
+    //    Task<object> FindAsync(params object[] keys);
 
-        Task<int> UpdateAsync(object id, object model);
-        int Update(object id, object model);
+    //    int Create(object model);
+    //    Task<int> CreateAsync(object model);
 
-        Task<int> DeleteAsync(object id);
-        int Delete(object id);
-        bool IsExists(object id);
-    }
+    //    int Update(object model, params object[] keys);
+    //    Task<int> UpdateAsync(object model, params object[] keys);
 
-    public interface IService<TModel, TKey> : IService
+    //    int Delete(params object[] keys);
+    //    Task<int> DeleteAsync(params object[] keys);
+
+    //    bool IsExists(params object[] keys);
+    //}
+
+    public interface IService<TModel, TKey>
         where TModel : IEntity<TKey>
-        where TKey : IConvertible
     {
-        new IEnumerable<TModel> Get();
-        Task<TModel> GetAsync(TKey id);
-        TModel Get(TKey id);
-        new Task<TModel> FindAsync(params object[] keys);
-        new TModel Find(params object[] keys);
+        IEnumerable<TModel> Get();
+        TModel Get(params object[] keys);
+        Task<TModel> GetAsync(params object[] keys);
 
-        Task<int> UpdateAsync(TKey id, TModel model);
-        int Update(TKey id, TModel model);
+        TModel Find(params object[] keys);
+        Task<TModel> FindAsync(params object[] keys);
 
-        Task<int> CreateAsync(TModel model);
+        int Update(TModel model, params object[] keys);
+        Task<int> UpdateAsync(TModel model, params object[] keys);
+
         int Create(TModel model);
+        Task<int> CreateAsync(TModel model);
+        int Delete(params object[] keys);
+        Task<int> DeleteAsync(params object[] keys);
 
-        Task<int> DeleteAsync(TKey id);
-        int Delete(TKey id);
-        bool IsExists(TKey id);
+        bool IsExists(params object[] keys);
+
     }
 }

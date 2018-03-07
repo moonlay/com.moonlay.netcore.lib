@@ -2,20 +2,28 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>Com.Moonlay.NetCore.Lib</PackageId>
-    <PackageVersion>1.0.0-alpha-20171025-001</PackageVersion>
     <Authors>Moonlay</Authors>
     <Title>Com.Moonlay.NetCore.Lib</Title>
     <Description>Moonlay NetCore standard library</Description>    
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <PackageReleaseNotes>1.0.1-alpha
+- reduce abstractions by removing IBaseEFService and BaseEFService
+- reduce abstractions by removing IService and use IService&lt;TModel,TKey&gt; as base service implementations
+- update StandardEntityService to comply to com.moonlay.entityframeworkcore.1.0.1-alpha</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/moonlay/com.moonlay.netcore.lib</PackageProjectUrl>    
     <Copyright>Copyright 2017 (c) Moonlay. All rights reserved.</Copyright>
     <PackageTags>NetCore, Service</PackageTags>
-  </PropertyGroup>
+    <Version>1.0.1-alpha</Version>
+    <RepositoryUrl>https://github.com/moonlay/com.moonlay.netcore.lib</RepositoryUrl>
+  </PropertyGroup> 
+  <ItemGroup>
+    <Compile Remove="Services\BaseEFService.cs" />
+    <Compile Remove="Services\IBaseEFService.cs" />
+  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Com.Moonlay.EntityFrameworkCore" Version="1.0.0-alpha-10122017-003" />
-    <PackageReference Include="Com.Moonlay.Models" Version="1.0.0-alpha-10122017-001" />
+    <PackageReference Include="Com.Moonlay.EntityFrameworkCore" Version="1.0.1-alpha" />
+    <PackageReference Include="Com.Moonlay.Models" Version="1.0.4-alpha-1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
   </ItemGroup>  
 </Project>

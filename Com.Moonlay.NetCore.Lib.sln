@@ -3,15 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Com.Moonlay.NetCore.Lib", "Com.Moonlay.NetCore.Lib\Com.Moonlay.NetCore.Lib.csproj", "{1FF859D9-A65C-4B4B-984A-68302BBCB010}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Moonlay.NetCore.Lib", "Com.Moonlay.NetCore.Lib\Com.Moonlay.NetCore.Lib.csproj", "{1FF859D9-A65C-4B4B-984A-68302BBCB010}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{981D34BF-CF04-4228-9983-4028C7FB35CA}"
 	ProjectSection(SolutionItems) = preProject
-		nuget-pack.bat = nuget-pack.bat
+		pack.bat = pack.bat
 		README.md = README.md
+		release-notes.txt = release-notes.txt
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Com.Moonlay.NetCore.Lib.Test", "Com.Moonlay.NetCore.Lib.Test\Com.Moonlay.NetCore.Lib.Test.csproj", "{E1CB5631-4AE4-4E52-B375-3506137B2125}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Com.Moonlay.NetCore.Lib.Test", "Com.Moonlay.NetCore.Lib.Test\Com.Moonlay.NetCore.Lib.Test.csproj", "{E1CB5631-4AE4-4E52-B375-3506137B2125}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{DD5526F6-FE6B-4114-B4B4-3584029E5110}"
 	ProjectSection(SolutionItems) = preProject

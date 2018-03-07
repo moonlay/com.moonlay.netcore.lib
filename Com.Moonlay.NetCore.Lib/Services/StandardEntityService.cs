@@ -1,55 +1,193 @@
 ﻿using Com.Moonlay.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Com.Moonlay.NetCore.Lib.Service
 {
-    public class StandardEntityService<TDbContext, TModel> : BaseEFService<TDbContext, TModel, int>
-          where TDbContext : DbContext
-          where TModel : StandardEntity, IValidatableObject
+    public abstract class StandardEntityService<TDbContext, TModel, TKey> : IService<TModel, TKey>
+        where TDbContext : DbContext
+        where TModel : StandardEntity<TKey>, IValidatableObject
+    {
+        TDbContext _dbContext;
+        DbSet<TModel> _dbSet;
+        string Actor { get; set; }
+        public IServiceProvider ServiceProvider { get; private set; }
+
+        public StandardEntityService(IServiceProvider serviceProvider)
+        {
+            this.ServiceProvider = serviceProvider;
+            this.Actor = string.Empty;
+        }
+        public TDbContext DbContext
+        {
+            get
+            {
+                if (_dbContext == null)
+                    _dbContext = this.ServiceProvider.GetService<TDbContext>();
+                return _dbContext;
+            }
+        }
+        public DbSet<TModel> DbSet
+        {
+            get
+            {
+                if (_dbSet == null)
+                    _dbSet = this.DbContext.Set<TModel>();
+                return _dbSet;
+            }
+        }
+
+        public virtual void OnCreating(TModel model) { }
+        public int Create(TModel model)
+        {
+            this.DbSet.Add(model);
+            this.OnCreating(model);
+            this.Validate(model);
+            model.FlagForCreate(this.Actor, string.Empty);
+
+            return this.DbContext.SaveChanges();
+        }
+        public Task<int> CreateAsync(TModel model)
+        {
+            this.DbSet.Add(model);
+            this.OnCreating(model);
+            this.Validate(model);
+            model.FlagForCreate(this.Actor, string.Empty);
+
+            return this.DbContext.SaveChangesAsync();
+        }
+
+
+        public virtual void OnDeleting(TModel entity) { }
+        public int Delete(params object[] keys)
+        {
+            var target = this.Get(keys);
+            if (target == null)
+                throw new Exception("Delete failed: data not found");
+
+            this.OnDeleting(target);
+            target.FlagForDelete(this.Actor, string.Empty);
+            return this.DbContext.SaveChanges();
+        }
+        public Task<int> DeleteAsync(params object[] keys)
+        {
+            return this.GetAsync(keys).ContinueWith(task =>
+            {
+                TModel target = task.Result;
+                if (target == null)
+                    throw new Exception("Delete failed: data not found");
+
+                this.OnDeleting(target);
+                target.FlagForDelete(this.Actor, string.Empty);
+
+                return this.DbContext.SaveChangesAsync();
+            }).Unwrap();
+        }
+
+
+        public TModel Find(params object[] keys)
+        {
+            return this.DbSet.Find(keys);
+        }
+        public Task<TModel> FindAsync(params object[] keys)
+        {
+            return this.DbSet.FindAsync(keys);
+        }
+
+
+        public IEnumerable<TModel> Get()
+        {
+            return this.DbSet;
+        }
+        public TModel Get(params object[] keys)
+        {
+            TModel data = this.DbSet.Find(keys);
+            if (data.IsDeleted)
+                return null;
+            return data;
+        }
+        public Task<TModel> GetAsync(params object[] keys)
+        {
+            return this.DbSet.FindAsync(keys)
+                .ContinueWith(task =>
+                {
+                    TModel data = task.Result;
+                    if (data.IsDeleted)
+                        return null;
+                    return data;
+                });
+        }
+
+
+        public virtual void OnUpdating(TModel model, TModel delta) { }
+        public int Update(TModel model, params object[] keys)
+        {
+            try
+            {
+                TModel target = this.DbSet.Find(keys);
+                if (target == null)
+                    throw new Exception("Update failed: data not found");
+
+                this.OnUpdating(target, model);
+                this.Validate(target);
+                target.FlagForUpdate(this.Actor, string.Empty);
+
+                return this.DbContext.SaveChanges();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+        }
+        public Task<int> UpdateAsync(TModel model, params object[] keys)
+        {
+            try
+            {
+                return this.DbSet.FindAsync(keys).ContinueWith(task =>
+                {
+                    TModel target = task.Result;
+                    if (target == null)
+                        throw new Exception("Update failed: data not found");
+
+                    this.OnUpdating(target, model);
+                    this.Validate(target);
+                    target.FlagForUpdate(this.Actor, string.Empty);
+
+                    return this.DbContext.SaveChangesAsync();
+                }).Unwrap();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                throw;
+            }
+        }
+
+
+        public bool IsExists(params object[] keys)
+        {
+            return this.DbSet.Find(keys) != null;
+        }
+        void Validate(TModel model)
+        {
+            List<ValidationResult> validationResults = new List<ValidationResult>();
+            ValidationContext validationContext = new ValidationContext(model, this.ServiceProvider, null);
+
+            if (!Validator.TryValidateObject(model, validationContext, validationResults, true))
+                throw new ServiceValidationExeption(validationContext, validationResults);
+        }
+    }
+    public abstract class StandardEntityService<TDbContext, TModel> : StandardEntityService<TDbContext, TModel, int>
+        where TDbContext : DbContext
+        where TModel : StandardEntity, IValidatableObject
     {
         public StandardEntityService(IServiceProvider serviceProvider) : base(serviceProvider)
         {
 
-        }
-
-        public override void OnCreating(TModel model)
-        {
-            var nowUtc = DateTime.UtcNow;
-            var agent = string.Empty;
-            var actor = string.Empty;
-
-            model._CreatedBy = model._LastModifiedBy = actor;
-            model._CreatedAgent = model._LastModifiedAgent = agent;
-            model._CreatedUtc = model._LastModifiedUtc = nowUtc;
-        }
-
-        public override void OnUpdating(int id, TModel model)
-        {
-            var nowUtc = DateTime.UtcNow;
-            var agent = string.Empty;
-            var actor = string.Empty;
-
-            model._LastModifiedBy = actor;
-            model._LastModifiedAgent = agent;
-            model._LastModifiedUtc = nowUtc;
-        }
-
-        public override void OnDeleting(TModel model)
-        {
-            var nowUtc = DateTime.UtcNow;
-            var agent = string.Empty;
-            var actor = string.Empty;
-
-            OnUpdating(model.Id, model);
-
-            model._IsDeleted = true;
-            model._DeletedBy = actor;
-            model._DeletedAgent = agent;
-            model._DeletedUtc = nowUtc;
         }
     }
 }

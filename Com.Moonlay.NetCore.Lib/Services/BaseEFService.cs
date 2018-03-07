@@ -1,234 +1,183 @@
-﻿using Com.Moonlay.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿//using Com.Moonlay.Models;
+//using Microsoft.EntityFrameworkCore;
+//using Microsoft.Extensions.DependencyInjection;
+//using System;
+//using System.Collections.Generic;
+//using System.ComponentModel.DataAnnotations;
+//using System.Linq;
+//using System.Threading.Tasks;
 
-namespace Com.Moonlay.NetCore.Lib.Service
-{
-    public abstract class BaseEFService<TDbContext, TModel, TKey> : IBaseEFService<TDbContext, TModel, TKey>
-        where TDbContext : DbContext
-        where TModel : class, IEntity<TKey>, IValidatableObject
-        where TKey : IConvertible
-    {
-        TDbContext _dbContext;
-        DbSet<TModel> _dbSet;
+//namespace Com.Moonlay.NetCore.Lib.Service
+//{
+//    public abstract class BaseEFService<TDbContext, TModel, TKey> : IService<TModel, TKey>
+//        where TDbContext : DbContext
+//        where TModel : StandardEntity<TKey>, IValidatableObject
+//    {
+//        TDbContext _dbContext;
+//        DbSet<TModel> _dbSet;
+//        string Actor;
+//        public IServiceProvider ServiceProvider { get; private set; }
 
-        public IServiceProvider ServiceProvider { get; private set; }
+//        public BaseEFService(IServiceProvider serviceProvider)
+//        {
+//            this.ServiceProvider = serviceProvider;
+//        }
+//        public TDbContext DbContext
+//        {
+//            get
+//            {
+//                if (_dbContext == null)
+//                    _dbContext = this.ServiceProvider.GetService<TDbContext>();
+//                return _dbContext;
+//            }
+//        }
+//        public DbSet<TModel> DbSet
+//        {
+//            get
+//            {
+//                if (_dbSet == null)
+//                    _dbSet = this.DbContext.Set<TModel>();
+//                return _dbSet;
+//            }
+//        } 
 
-        public BaseEFService(IServiceProvider serviceProvider)
-        {
-            this.ServiceProvider = serviceProvider;
-        }
+//        public virtual void OnCreating(TModel model) { }
+//        public int Create(TModel model)
+//        {
+//            this.DbSet.Add(model);
+//            this.OnCreating(model);
+//            this.Validate(model);
+//            model.FlagForCreate(this.Actor, string.Empty);
 
-        public TDbContext DbContext
-        {
-            get
-            {
-                if (_dbContext == null)
-                    _dbContext = this.ServiceProvider.GetService<TDbContext>();
-                return _dbContext;
-            }
-        }
-        public DbSet<TModel> DbSet
-        {
-            get
-            {
-                if (_dbSet == null)
-                    _dbSet = this.DbContext.Set<TModel>();
-                return _dbSet;
-            }
-        }
+//            return this.DbContext.SaveChanges();
+//        }
+//        public Task<int> CreateAsync(TModel model)
+//        {
+//            this.DbSet.Add(model);
+//            this.OnCreating(model);
+//            this.Validate(model);
+//            model.FlagForCreate(this.Actor, string.Empty);
 
-        DbContext IBaseEFService.DbContext { get { return this.DbContext; } }
+//            return this.DbContext.SaveChangesAsync();
+//        }
 
-        void Validate(TModel model)
-        {
-            List<ValidationResult> validationResults = new List<ValidationResult>();
-            ValidationContext validationContext = new ValidationContext(model, this.ServiceProvider, null);
 
-            if (!Validator.TryValidateObject(model, validationContext, validationResults, true))
-                throw new ServiceValidationExeption(validationContext, validationResults);
-        }
+//        public virtual void OnDeleting(TModel entity) { this.DbSet.Remove(entity); }
+//        public int Delete(params object[] keys)
+//        {
+//            var target = this.Get(keys);
+//            if (target == null)
+//                throw new Exception("Delete failed: data not found");
 
-        public virtual void OnCreating(TModel model) { }
-        public virtual void OnUpdating(TKey id, TModel model) { }
-        public virtual void OnDeleting(TModel entity) { this.DbSet.Remove(entity); }
+//            this.OnDeleting(target);
+//            target.FlagForDelete(this.Actor, string.Empty);
+//            return this.DbContext.SaveChanges();
+//        }
+//        public Task<int> DeleteAsync(params object[] keys)
+//        {
+//            return this.GetAsync(keys).ContinueWith(task =>
+//            {
+//                TModel target = task.Result;
+//                if (target == null)
+//                    throw new Exception("Delete failed: data not found");
 
-        public TModel Find(params object[] keys)
-        {
-            return this.DbSet.Find(keys);
-        }
+//                this.OnDeleting(target);
+//                target.FlagForDelete(this.Actor, string.Empty);
 
-        public Task<TModel> FindAsync(params object[] keys)
-        {
-            return this.DbSet.FindAsync(keys);
-        }
+//                return this.DbContext.SaveChangesAsync();
+//            }).Unwrap();
+//        }
 
-        public IEnumerable<TModel> Get()
-        {
-            return this.DbSet;
-        }
 
-        public Task<TModel> GetAsync(TKey id)
-        {
-            return this.DbSet.SingleOrDefaultAsync(e => e.Id.Equals(id));
-        }
+//        public TModel Find(params object[] keys)
+//        {
+//            return this.DbSet.Find(keys);
+//        }
+//        public Task<TModel> FindAsync(params object[] keys)
+//        {
+//            return this.DbSet.FindAsync(keys);
+//        }
 
-        public TModel Get(TKey id)
-        {
-            return this.DbContext.Set<TModel>().SingleOrDefault(e => e.Id.Equals(id));
-        }
 
-        public Task<int> UpdateAsync(TKey id, TModel model)
-        {
-            try
-            {
-                this.DbContext.Entry(model).State = EntityState.Modified;
-                this.OnUpdating(id, model);
-                this.Validate(model);
-                return this.DbContext.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!IsExists(id))
-                {
-                    throw;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
-        public int Update(TKey id, TModel model)
-        {
-            try
-            {
-                this.DbContext.Entry(model).State = EntityState.Modified;
-                this.OnUpdating(id, model);
-                this.Validate(model);
-                return this.DbContext.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!IsExists(id))
-                {
-                    throw;
-                }
-                else
-                {
-                    throw;
-                }
-            }
-        }
+//        public IEnumerable<TModel> Get()
+//        {
+//            return this.DbSet;
+//        }
+//        public TModel Get(params object[] keys)
+//        {
+//            TModel data = this.DbSet.Find(keys);
+//            if (data.IsDeleted)
+//                return null;
+//            return data;
+//        }
+//        public Task<TModel> GetAsync(params object[] keys)
+//        {
+//            return this.DbSet.FindAsync(keys)
+//                .ContinueWith(task =>
+//                {
+//                    TModel data = task.Result;
+//                    if (data.IsDeleted)
+//                        return null;
+//                    return data;
+//                });
+//        }
 
-        public Task<int> CreateAsync(TModel model)
-        {
-            this.DbSet.Add(model);
-            this.OnCreating(model);
-            this.Validate(model);
-            return this.DbContext.SaveChangesAsync();
-        }
 
-        public int Create(TModel model)
-        {
-            this.DbSet.Add(model);
-            this.OnCreating(model);
-            this.Validate(model);
-            return this.DbContext.SaveChanges();
-        }
+//        public virtual void OnUpdating(TModel model, TModel delta) { }
+//        public int Update(TModel model, params object[] keys)
+//        {
+//            try
+//            {
+//                TModel target = this.DbSet.Find(keys);
+//                if (target == null)
+//                    throw new Exception("Update failed: data not found");
 
-        public Task<int> DeleteAsync(TKey id)
-        {
-            var entity = this.Get(id);
-            if (entity == null)
-            {
-                throw new Exception();
-            }
+//                this.OnUpdating(target, model);
+//                this.Validate(target);
+//                target.FlagForUpdate(this.Actor, string.Empty);
 
-            this.OnDeleting(entity);
-            return this.DbContext.SaveChangesAsync();
-        }
+//                return this.DbContext.SaveChanges();
+//            }
+//            catch (DbUpdateConcurrencyException)
+//            {
+//                throw;
+//            }
+//        }
+//        public Task<int> UpdateAsync(TModel model, params object[] keys)
+//        {
+//            try
+//            {
+//                return this.DbSet.FindAsync(keys).ContinueWith(task =>
+//                    {
+//                        TModel target = task.Result;
+//                        if (target == null)
+//                            throw new Exception("Update failed: data not found");
 
-        public int Delete(TKey id)
-        {
-            var entity = this.Get(id);
-            if (entity == null)
-            {
-                throw new Exception();
-            }
-            this.OnDeleting(entity);
-            return this.DbContext.SaveChanges();
-        }
+//                        this.OnUpdating(target, model);
+//                        this.Validate(target);
+//                        target.FlagForUpdate(this.Actor, string.Empty);
 
-        public bool IsExists(TKey id)
-        {
-            return this.DbSet.Any(m => m.Id.Equals(id));
-        }
+//                        return this.DbContext.SaveChangesAsync();
+//                    }).Unwrap();
+//            }
+//            catch (DbUpdateConcurrencyException)
+//            {
+//                throw;
+//            }
+//        }
+        
 
-        IEnumerable<object> IService.Get()
-        {
-            return ((IService<TModel, TKey>)this).Get();
-        }
+//        public bool IsExists(params object[] keys)
+//        {
+//            return this.DbSet.Find(keys) != null;
+//        }
+//        void Validate(TModel model)
+//        {
+//            List<ValidationResult> validationResults = new List<ValidationResult>();
+//            ValidationContext validationContext = new ValidationContext(model, this.ServiceProvider, null);
 
-        Task<object> IService.GetAsync(object id)
-        {
-            return System.Threading.Tasks.Task.FromResult((object)Get((TKey)id));
-        }
-
-        object IService.Get(object id)
-        {
-            return ((IService<TModel, TKey>)this).Get((TKey)id);
-        }
-
-        Task<object> IService.FindAsync(params object[] keys)
-        {
-            return System.Threading.Tasks.Task.FromResult((object)((IService<TModel, TKey>)this).FindAsync(keys));
-        }
-
-        object IService.Find(params object[] keys)
-        {
-            return ((IService<TModel, TKey>)this).Find(keys);
-        }
-
-        Task<int> IService.CreateAsync(object model)
-        {
-            return ((IService<TModel, TKey>)this).CreateAsync(model as TModel);
-        }
-
-        int IService.Create(object model)
-        {
-            return ((IService<TModel, TKey>)this).Create(model as TModel);
-        }
-
-        Task<int> IService.UpdateAsync(object id, object model)
-        {
-            return ((IService<TModel, TKey>)this).UpdateAsync((TKey)id, model as TModel);
-        }
-
-        int IService.Update(object id, object model)
-        {
-            return ((IService<TModel, TKey>)this).Update((TKey)id, model as TModel);
-        }
-
-        Task<int> IService.DeleteAsync(object id)
-        {
-            return ((IService<TModel, TKey>)this).DeleteAsync((TKey)id);
-        }
-
-        int IService.Delete(object id)
-        {
-            return ((IService<TModel, TKey>)this).Delete((TKey)id);
-        }
-
-        bool IService.IsExists(object id)
-        {
-            return ((IService<TModel, TKey>)this).IsExists((TKey)id);
-        }
-    }
-
-}
+//            if (!Validator.TryValidateObject(model, validationContext, validationResults, true))
+//                throw new ServiceValidationExeption(validationContext, validationResults);
+//        }
+//    }
+//}
